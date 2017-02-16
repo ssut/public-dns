@@ -1,16 +1,46 @@
-import requests
-from hyper.contrib import HTTP20Adapter
+import ujson
+from hyper.contrib import HTTPConnection
+
+from publicdns import utils
+from publicdns.exceptions import InvalidStatusCode, InvalidDNSStatus
+from publicdns.types import StatusCode
 
 DEFAULT_SERVER = 'https://dns.google.com/resolve'
 
-class PublicDNS:
+class PublicDNS(object):
     def __init__(self, server=DEFAULT_SERVER, edns_client_subnet='0.0.0.0/0'):
+        self.server = server
         self.edns_client_subnet = edns_client_subnet
 
-        self.session = requests.Session()
-        self.session.mount(server, HTTP20Adapter())
+        netloc = utils.get_netloc(server)
+        self.session = HTTPConnection(netloc)
 
-    def resolve(self):
-        pass
+    def query(self, hostname, type='A', dnssec=True):
+        assert utils.validate_hostname(hostname)
+        assert utils.validate_rr_type(type)
 
+        params = self.build_params(hostname, type, dnssec)
+        url = '%s?%s' % (self.server, params)
+        req = self.session.request('GET', url)
+        resp = self.session.get_response(req)
+        if resp.status != 200:
+            raise InvalidStatusCode
+        body = resp.read()
+        json = ujson.loads(body)
+        obj = utils.populate_response(json)
+        return obj
+
+    def resolve(self, hostname, type='A', dnssec=True):
+        resp = self.query(hostname, type, dnssec)
+        if resp.status != StatusCode.NOERROR:
+            raise InvalidDNSStatus("Invalid DNS Status: %d" % (resp.status))
+
+    def build_params(self, hostname, type, dnssec):
+        params = {
+            'name': hostname,
+            'type': type,
+            'cd': int(not dnssec),
+            'edns_client_subnet': self.edns_client_subnet,
+        }
+        return utils.build_qs(params)
 
