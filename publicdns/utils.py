@@ -6,6 +6,7 @@ from six.moves.urllib.parse import urlencode, urlparse
 
 from publicdns._compat import PY3
 from publicdns.exceptions import InvalidHostname, InvalidRRType
+from publicdns.exceptions import DNSExceptions
 from publicdns.types import RR
 from publicdns.models import (
     DNSResponse, DNSQuestion, DNSRR
@@ -80,4 +81,12 @@ def populate_response(json):
             edns_client_subnet=json.get('edns_client_subnet', None),
             comment=json.get('comment', ''))
     return resp
+
+def dns_exception(code):
+    assert 1 <= code <= 9
+
+    exception = DNSExceptions[code - 1]
+    status = exception.__doc__
+    return exception(status)
+
 
