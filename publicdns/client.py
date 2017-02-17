@@ -2,7 +2,7 @@ import ujson
 from hyper.contrib import HTTPConnection
 
 from publicdns import utils
-from publicdns.exceptions import InvalidStatusCode, InvalidDNSStatus
+from publicdns.exceptions import InvalidHTTPStatusCode
 from publicdns.types import StatusCode
 
 DEFAULT_SERVER = 'https://dns.google.com/resolve'
@@ -24,7 +24,7 @@ class PublicDNS(object):
         req = self.session.request('GET', url)
         resp = self.session.get_response(req)
         if resp.status != 200:
-            raise InvalidStatusCode
+            raise InvalidHTTPStatusCode
         body = resp.read()
         json = ujson.loads(body)
         obj = utils.populate_response(json)
@@ -33,7 +33,9 @@ class PublicDNS(object):
     def resolve(self, hostname, type='A', dnssec=True):
         resp = self.query(hostname, type, dnssec)
         if resp.status != StatusCode.NOERROR:
-            raise InvalidDNSStatus("Invalid DNS Status: %d" % (resp.status))
+            raise utils.dns_exception(resp.status)
+        data = [r.data for r in resp.answer if r.data]
+        return data
 
     def build_params(self, hostname, type, dnssec):
         params = {
