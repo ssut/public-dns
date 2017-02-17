@@ -89,6 +89,8 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+.testmondata
+.tmontmp/
 
 # Translations
 *.mo
