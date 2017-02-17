@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from collections import OrderedDict
 
 import idna
 from six.moves.urllib.parse import urlencode, urlparse
@@ -12,6 +11,7 @@ from publicdns.models import (
     DNSResponse, DNSQuestion, DNSRR
 )
 
+
 def get_netloc(url):
     o = urlparse(url)
     if o.scheme == 'https':
@@ -19,8 +19,10 @@ def get_netloc(url):
     else:
         return o.netloc
 
+
 def build_qs(params):
     return urlencode(params)
+
 
 def validate_hostname(hostname):
     hostname = hostname.rstrip('.')
@@ -40,6 +42,7 @@ def validate_hostname(hostname):
 
     return True
 
+
 def validate_rr_type(rr):
     if isinstance(rr, int) and not (1 <= rr <= 65535):
         raise InvalidRRType
@@ -49,6 +52,7 @@ def validate_rr_type(rr):
         raise InvalidRRType
 
     return True
+
 
 def populate_response(json):
     questions = json.get('Question', [])
@@ -68,25 +72,25 @@ def populate_response(json):
         records[name] = record
 
     resp = DNSResponse(
-            status=int(json['Status']),
-            TC=bool(json['TC']),
-            RD=bool(json['RD']),
-            RA=bool(json['RA']),
-            AD=bool(json['AD']),
-            CD=bool(json['CD']),
-            question=questions,
-            answer=records['Answer'],
-            authority=records['Authority'],
-            additional=records['Additional'],
-            edns_client_subnet=json.get('edns_client_subnet', None),
-            comment=json.get('comment', ''))
+        status=int(json['Status']),
+        TC=bool(json['TC']),
+        RD=bool(json['RD']),
+        RA=bool(json['RA']),
+        AD=bool(json['AD']),
+        CD=bool(json['CD']),
+        question=questions,
+        answer=records['Answer'],
+        authority=records['Authority'],
+        additional=records['Additional'],
+        edns_client_subnet=json.get('edns_client_subnet', None),
+        comment=json.get('comment', ''))
     return resp
 
-def dns_exception(code):
+
+def dns_exception(resp):
+    code = resp.status
     assert 1 <= code <= 9
 
     exception = DNSExceptions[code - 1]
-    status = exception.__doc__
+    status = resp.comment or exception.__doc__
     return exception(status)
-
-

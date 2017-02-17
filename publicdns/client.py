@@ -7,7 +7,9 @@ from publicdns.types import RR, StatusCode
 
 DEFAULT_SERVER = 'https://dns.google.com/resolve'
 
+
 class PublicDNS(object):
+
     def __init__(self, server=DEFAULT_SERVER, edns_client_subnet='0.0.0.0/0'):
         self.server = server
         self.edns_client_subnet = edns_client_subnet
@@ -19,8 +21,8 @@ class PublicDNS(object):
         assert utils.validate_hostname(hostname)
         assert utils.validate_rr_type(type)
 
-        if (type in ('PTR', RR['PTR']) and \
-            not (hostname.endswith('.in-addr.arpa') or \
+        if (type in ('PTR', RR['PTR']) and
+            not (hostname.endswith('.in-addr.arpa') or
                  hostname.endswith('.in-addr.arpa.'))):
             hostname = '%s.in-addr.arpa' % (hostname)
 
@@ -38,7 +40,7 @@ class PublicDNS(object):
     def resolve(self, hostname, type='A', dnssec=True):
         resp = self.query(hostname, type, dnssec)
         if resp.status != StatusCode.NOERROR:
-            raise utils.dns_exception(resp.status)
+            raise utils.dns_exception(resp)
         data = [r.data for r in resp.answer if r.data]
         return data
 
@@ -50,4 +52,3 @@ class PublicDNS(object):
             'edns_client_subnet': self.edns_client_subnet,
         }
         return utils.build_qs(params)
-

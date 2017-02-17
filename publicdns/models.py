@@ -8,4 +8,3 @@ DNSResponse = namedtuple('DNSResponse', ['status', 'TC', 'RD', 'RA', 'AD', 'CD',
 DNSQuestion = namedtuple('DNSQuestion', ['name', 'type'])
 
 DNSRR = namedtuple('DNSRR', ['name', 'type', 'TTL', 'data'])
-
