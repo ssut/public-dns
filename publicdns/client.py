@@ -3,7 +3,7 @@ from hyper.contrib import HTTPConnection
 
 from publicdns import utils
 from publicdns.exceptions import InvalidHTTPStatusCode
-from publicdns.types import StatusCode
+from publicdns.types import RR, StatusCode
 
 DEFAULT_SERVER = 'https://dns.google.com/resolve'
 
@@ -18,6 +18,11 @@ class PublicDNS(object):
     def query(self, hostname, type='A', dnssec=True):
         assert utils.validate_hostname(hostname)
         assert utils.validate_rr_type(type)
+
+        if (type in ('PTR', RR['PTR']) and \
+            not (hostname.endswith('.in-addr.arpa') or \
+                 hostname.endswith('.in-addr.arpa.'))):
+            hostname = '%s.in-addr.arpa' % (hostname)
 
         params = self.build_params(hostname, type, dnssec)
         url = '%s?%s' % (self.server, params)
