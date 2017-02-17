@@ -1,5 +1,5 @@
-import ujson
 from hyper.contrib import HTTPConnection
+from ujson import loads as load_json
 
 from publicdns import utils
 from publicdns.exceptions import InvalidHTTPStatusCode
@@ -33,7 +33,7 @@ class PublicDNS(object):
         if resp.status != 200:
             raise InvalidHTTPStatusCode
         body = resp.read()
-        json = ujson.loads(body)
+        json = load_json(body)
         obj = utils.populate_response(json)
         return obj
 

@@ -1,15 +1,15 @@
 from __future__ import unicode_literals
 
-import idna
+from idna import encode as encode_idna
 from six.moves.urllib.parse import urlencode, urlparse
 
 from publicdns._compat import PY3
-from publicdns.exceptions import InvalidHostname, InvalidRRType
 from publicdns.exceptions import DNSExceptions
-from publicdns.types import RR
+from publicdns.exceptions import InvalidHostname, InvalidRRType
 from publicdns.models import (
-    DNSResponse, DNSQuestion, DNSRR
+    DNSRR, DNSResponse, DNSQuestion
 )
+from publicdns.types import RR
 
 
 def get_netloc(url):
@@ -35,7 +35,7 @@ def validate_hostname(hostname):
     try:
         hostname.encode('ascii')
     except UnicodeEncodeError:
-        hostname = idna.encode(hostname)
+        hostname = encode_idna(hostname)
         if PY3:
             hostname = hostname.decode()
         return validate_hostname(hostname)

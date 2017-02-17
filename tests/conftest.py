@@ -1,7 +1,7 @@
-import pytest
+from pytest import fixture
 
 
-@pytest.fixture
+@fixture
 def client():
     from publicdns.client import PublicDNS
     return PublicDNS()
