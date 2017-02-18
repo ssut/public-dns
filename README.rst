@@ -2,6 +2,16 @@
 PublicDNS
 =========
 
+    .. image:: https://codeclimate.com/github/ssut/public-dns/badges/gpa.svg
+       :target: https://codeclimate.com/github/ssut/public-dns
+       :alt: Code Climate
+    .. image:: https://travis-ci.org/ssut/public-dns.svg?branch=master
+       :target: https://travis-ci.org/ssut/public-dns
+     .. image:: https://badge.fury.io/py/publicdns.svg
+       :target: https://badge.fury.io/py/publicdns
+    .. image:: https://img.shields.io/github/license/mashape/apistatus.svg
+       :target: http://opensource.org/licenses/MIT
+
 PublicDNS is a high-perfmrnace, secure, reliable python DNS client `over HTTP/2 and TLS`__.
 
 __ https://developers.google.com/speed/public-dns/docs/dns-over-https
