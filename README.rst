@@ -7,7 +7,9 @@ PublicDNS
        :alt: Code Climate
     .. image:: https://travis-ci.org/ssut/public-dns.svg?branch=master
        :target: https://travis-ci.org/ssut/public-dns
-     .. image:: https://badge.fury.io/py/publicdns.svg
+    .. image:: https://coveralls.io/repos/github/ssut/public-dns/badge.svg?branch=master
+       :target: https://coveralls.io/github/ssut/public-dns?branch=master
+    .. image:: https://badge.fury.io/py/publicdns.svg
        :target: https://badge.fury.io/py/publicdns
     .. image:: https://img.shields.io/github/license/mashape/apistatus.svg
        :target: http://opensource.org/licenses/MIT
