@@ -20,12 +20,9 @@ def get_version():
             return '.'.join([str(x) for x in version])
 
 
-test_requirements = [
-    'pytest',
-    'pytest-testmon',
-    'flake8',
-    'import-order',
-]
+filename = os.path.join(os.path.dirname(__file__), 'test-requirements.txt')
+with open(filename, 'r') as f:
+    test_requirements = list(filter(None, f.read().split('\n')))
 
 filename = os.path.join(os.path.dirname(__file__), 'requirements.txt')
 with open(filename, 'r') as f:
