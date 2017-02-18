@@ -41,7 +41,8 @@ class PublicDNS(object):
         resp = self.query(hostname, type, dnssec)
         if resp.status != StatusCode.NOERROR:
             raise utils.dns_exception(resp)
-        data = [r.data for r in resp.answer if r.data]
+        data = [r.data for r in resp.answer
+                if r.type in (type, RR[type]) and r.data]
         return data
 
     def build_params(self, hostname, type, dnssec):
