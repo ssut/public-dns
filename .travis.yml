@@ -6,7 +6,4 @@ install:
 - pip install tox-travis
 - pip install pytest-cov coveralls
 script: tox
-after_success:
-    - if [[ $ENV == python=3.* ]]; then
-          coveralls;
-      fi
+after_success: coveralls
