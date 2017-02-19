@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from idna import encode as encode_idna
+from six import string_types
 from six.moves.urllib.parse import urlencode, urlparse
 
 from publicdns._compat import PY3
@@ -48,7 +49,7 @@ def validate_rr_type(rr):
         raise InvalidRRType
 
     canonicals = RR.keys()
-    if rr.upper() not in canonicals:
+    if isinstance(rr, string_types) and rr.upper() not in canonicals:
         raise InvalidRRType
 
     return True

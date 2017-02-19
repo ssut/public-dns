@@ -1,3 +1,6 @@
+from pytest import raises
+
+
 def test_client_resolve_a(client):
     resp = client.resolve('google-public-dns-a.google.com')
     assert set(resp).intersection(['8.8.8.8'])
@@ -6,6 +9,12 @@ def test_client_resolve_a(client):
 def test_client_resolve_a_roundrobin(client):
     resp = client.resolve('www.naver.com')
     assert len(resp) == 2
+
+
+def test_client_dns_error(client):
+    from publicdns.exceptions import NXDomain
+    with raises(NXDomain):
+        client.resolve('domain.that.does.not.exist')
 
 
 def test_client_resolve_ptr(client):
