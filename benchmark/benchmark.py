@@ -24,7 +24,7 @@ def main():
         'leave': True,
     }
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=4) as pool:
         print('- dns.resolver')
         started = timeit.default_timer()
         resolver = dns_resolver.Resolver()
@@ -36,7 +36,7 @@ def main():
         elapsed = timeit.default_timer() - started
         print('dns.resolver * 100 - took {}s'.format(elapsed))
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=4) as pool:
         print('- PublicDNS')
         started = timeit.default_timer()
         client = PublicDNS()

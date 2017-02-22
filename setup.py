@@ -32,7 +32,7 @@ with open(filename, 'r') as f:
 setup(
     name='publicdns',
     version=get_version(),
-    description='',
+    description='A quick python implementation for google public dns service, using DNS-over-HTTPS.',
     long_description=open('README.rst', 'r').read(),
     url='https://github.com/ssut/publicdns',
     author='SuHun Han',

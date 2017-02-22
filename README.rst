@@ -23,8 +23,11 @@ As written in Google DNS-over-HTTPS guide, this offers a variety of features as 
 - support all RRs
 - support DNSSEC validation
 - support for IPv4 and IPv6
+- support `edns-client-subnet`__
 - can insure against `privacy concerns`__
+    - ISPs will not able to track which DNS names you have queried
 
+__ https://datatracker.ietf.org/doc/rfc7871/
 __ https://https.cio.gov/everything/
 
 Performance
@@ -32,7 +35,7 @@ Performance
 
 While tranditional DNS client does not support `put multiple questions into a single call`__,
 PublicDNS has advantage that it's much faster when dealing with multiple questions, `a big advantage of HTTP/2`__.
-Because Google servers also run over QUIC, this also means that performance will be much better if it is implemented.
+Because Google servers also run over QUIC, this means that performance will be much better if it is implemented.
 
 I recently benchmarked with a small amount of domains, take a look at the result:
 
@@ -45,8 +48,13 @@ I recently benchmarked with a small amount of domains, take a look at the result
        100%|███| 100/100 [00:13<00:00, 12.8it/s]
        PublicDNS * 100 - took 13.507565873209387s
 
+Note that results will vary depend on the network since most dns servers use `IP Anycast`__. Further,
+PublicDNS needs only one TCP connection as did in the benchmark, whereas traditional clients will need to establish
+multiple TCP or UDP connections.
+
 __ https://groups.google.com/d/msg/comp.protocols.dns.bind/uOWxNkm7AVg/wKtsmudkY1UJ
 __ https://istlsfastyet.com/#faq
+__ https://developers.google.com/speed/public-dns/faq#locations
 
 Installation
 ============
@@ -146,5 +154,3 @@ License
 PublicDNS is released under the `MIT License`__.
 
 __ http://www.opensource.org/licenses/MIT
-
-
