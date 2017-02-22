@@ -1,4 +1,4 @@
-from hyper.contrib import HTTPConnection
+from hyper import HTTP20Connection
 from ujson import loads as load_json
 
 from publicdns import utils
@@ -10,12 +10,16 @@ DEFAULT_SERVER = 'https://dns.google.com/resolve'
 
 class PublicDNS(object):
 
+    default_headers = {
+        'accept-encoding': 'gzip, deflate',
+    }
+
     def __init__(self, server=DEFAULT_SERVER, edns_client_subnet='0.0.0.0/0'):
         self.server = server
         self.edns_client_subnet = edns_client_subnet
 
         netloc = utils.get_netloc(server)
-        self.session = HTTPConnection(netloc)
+        self.session = HTTP20Connection(netloc)
 
     def query(self, hostname, type='A', dnssec=True):
         assert utils.validate_hostname(hostname)
@@ -28,7 +32,7 @@ class PublicDNS(object):
 
         params = self.build_params(hostname, type, dnssec)
         url = '%s?%s' % (self.server, params)
-        req = self.session.request('GET', url)
+        req = self.session.request('GET', url, headers=PublicDNS.default_headers)
         resp = self.session.get_response(req)
         if resp.status != 200:
             raise InvalidHTTPStatusCode
