@@ -1,4 +1,7 @@
+from socket import gaierror
 from publicdns.client import PublicDNS
+from publicdns.exceptions import NXDomain
+
 
 client = PublicDNS()
 
@@ -6,8 +9,8 @@ client = PublicDNS()
 def _gethostbyname(hostname):
     try:
         return client.resolve(hostname)[0]
-    except Exception:
-        return '0.0.0.0'
+    except NXDomain:
+        raise gaierror('[Errno 8] nodename nor servname provided, or not known')
 
 
 def patch_socket():
