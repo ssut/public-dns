@@ -1,4 +1,11 @@
 from pytest import raises
+from publicdns.exceptions import InvalidHTTPStatusCode
+
+
+def test_client_invalid_status():
+	from publicdns.client import PublicDNS
+	client = PublicDNS(server='https://www.google.com')
+	assert raises(InvalidHTTPStatusCode, client.resolve, 'www.google.com')
 
 
 def test_client_resolve_a(client):
