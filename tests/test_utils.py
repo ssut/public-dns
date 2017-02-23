@@ -24,7 +24,8 @@ def test_build_qs():
 
 def test_validate_hostname():
     assert raises(exc.InvalidHostname, utils.validate_hostname, '')
-    assert raises(exc.InvalidHostname, utils.validate_hostname, '.' * 254)
+    assert raises(exc.InvalidHostname, utils.validate_hostname,
+                  '.' + ('_' * 64))
     assert utils.validate_hostname(u'내도메인.한국')
 
 
