@@ -32,7 +32,8 @@ class PublicDNS(object):
 
         params = self.build_params(hostname, type, dnssec)
         url = '%s?%s' % (self.server, params)
-        req = self.session.request('GET', url, headers=PublicDNS.default_headers)
+        req = self.session.request('GET', url,
+                                   headers=PublicDNS.default_headers)
         resp = self.session.get_response(req)
         if resp.status != 200:
             raise InvalidHTTPStatusCode

@@ -10,7 +10,8 @@ def _gethostbyname(hostname):
     try:
         return client.resolve(hostname)[0]
     except NXDomain:
-        raise gaierror('[Errno 8] nodename nor servname provided, or not known')
+        raise gaierror('[Errno 8]'
+        			   ' nodename nor servname provided, or not known')
 
 
 def patch_socket():
