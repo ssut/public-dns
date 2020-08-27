@@ -1,4 +1,4 @@
-from hyper import HTTP20Connection
+from httpx import Client
 from ujson import loads as load_json
 
 from publicdns import utils
@@ -18,8 +18,7 @@ class PublicDNS(object):
         self.server = server
         self.edns_client_subnet = edns_client_subnet
 
-        netloc = utils.get_netloc(server)
-        self.session = HTTP20Connection(netloc)
+        self.session = Client(http2=True)
 
     def query(self, hostname, type='A', dnssec=True):
         assert utils.validate_hostname(hostname)
@@ -32,13 +31,15 @@ class PublicDNS(object):
 
         params = self.build_params(hostname, type, dnssec)
         url = '%s?%s' % (self.server, params)
-        req = self.session.request('GET', url,
-                                   headers=PublicDNS.default_headers)
-        resp = self.session.get_response(req)
-        if resp.status != 200:
-            raise InvalidHTTPStatusCode
-        body = resp.read()
-        json = load_json(body)
+        resp = self.session.get(url, headers=PublicDNS.default_headers)
+        if resp.status_code != 200:
+            raise InvalidHTTPStatusCode(
+                '{} {}: {}'.format(resp.status_code, resp.reason, url))
+        body = resp.content
+        try:
+            json = load_json(body)
+        except ValueError as e:
+            raise InvalidHTTPStatusCode(e)
         obj = utils.populate_response(json)
         return obj
 
