@@ -34,7 +34,7 @@ setup(
     version=get_version(),
     description='A quick python implementation for google public dns service, using DNS-over-HTTPS.',
     long_description=open('README.rst', 'r').read(),
-    url='https://github.com/ssut/publicdns',
+    url='https://github.com/ssut/public-dns',
     author='SuHun Han',
     author_email='ssut' '@' 'ssut.me',
     license='MIT',
